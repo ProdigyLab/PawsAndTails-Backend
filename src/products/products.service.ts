@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateProductDto } from './dto/create-products.dto';
+import { UpdateProductDto } from './dto/update-products.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserInfo } from './entities/user.entity';
+import { ProductInfo } from './entities/products.entity';
 
 @Injectable()
-export class UsersService {
+export class ProductService {
   constructor(
-    @InjectRepository(UserInfo)
-    private userInfoRepository: Repository<UserInfo>,
+    @InjectRepository(ProductInfo)
+    private userInfoRepository: Repository<ProductInfo>,
   ) {}
-  async create(createUserDto: CreateUserDto) {
+  async create(createProductDto: CreateProductDto) {
     try {
-      const userInfo = await this.userInfoRepository.save(createUserDto);
+      const userInfo = await this.userInfoRepository.save(createProductDto);
       if (!userInfo)
         throw new NotFoundException(
           'User can not be created. Please try again',
@@ -50,7 +50,7 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateProductDto) {
     // return `This action updates a #${id} user`;
     try {
       const userInfo = await this.userInfoRepository.findOneBy({ intId: id });

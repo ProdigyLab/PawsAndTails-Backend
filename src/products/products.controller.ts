@@ -7,25 +7,25 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ProductService } from './products.service';
+import { CreateProductDto } from './dto/create-products.dto';
+import { UpdateProductDto } from './dto/update-products.dto';
 import { response } from 'express';
 
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@Controller('products')
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() CreateProductDto: CreateProductDto) {
+    return this.productService.create(CreateProductDto);
   }
 
   @Get()
   async findAll() {
     // return this.usersService.findAll();
     try {
-      const data: any = await this.usersService.findAll();
+      const data: any = await this.productService.findAll();
       return data;
     } catch (error) {
       console.log(error);
@@ -36,7 +36,7 @@ export class UsersController {
   async findOne(@Param('id') id: string) {
     // return this.usersService.findOne(+id);
     try {
-      const data: any = await this.usersService.findOne(+id);
+      const data: any = await this.productService.findOne(+id);
       return data;
     } catch (error) {
       console.log(error);
@@ -44,9 +44,12 @@ export class UsersController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateProductDto,
+  ) {
     try {
-      const data: any = await this.usersService.update(+id, updateUserDto);
+      const data: any = await this.productService.update(+id, updateUserDto);
       return { message: 'Updated successfully' };
     } catch (error) {
       console.log(error);
@@ -56,7 +59,7 @@ export class UsersController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
-      const data: any = await this.usersService.remove(+id);
+      const data: any = await this.productService.remove(+id);
       return { message: 'Deleted successfully' };
     } catch (error) {
       console.log(error);
