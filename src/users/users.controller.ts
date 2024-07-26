@@ -6,19 +6,35 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Req() request: Request,
+    @Res() response: Response,
+  ) {
+    // return this.usersService.create(createUserDto);
+    try {
+      const data: any = await this.usersService.create(createUserDto);
+      return response.status(200).json({
+        statusCode: 200,
+        message: 'User Successfully Created',
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Get()

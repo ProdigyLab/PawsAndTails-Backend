@@ -5,7 +5,7 @@ export class UserInfo {
   @PrimaryGeneratedColumn()
   intId: number;
 
-  @Column({ type: 'int', nullable: false, default: 1 })
+  @Column({ type: 'int', nullable: true, default: 1 })
   intRoleId: number;
 
   @Column({ type: 'varchar', length: 512, nullable: true })
@@ -46,6 +46,6 @@ export class UserInfo {
   @Column({ type: 'boolean', default: true })
   blnIsActive: boolean;
 
-  @Column({ type: 'int', nullable: false })
+  @Column({ type: 'int', nullable: true })
   intOrganizationId: number;
 }

@@ -7,7 +7,11 @@ import configService from './database/dbconfigue';
 import { ProductModule } from './products/products.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig()), UsersModule,ProductModule ],
+  imports: [
+    TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
+    UsersModule,
+    ProductModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
