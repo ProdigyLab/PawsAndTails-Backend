@@ -10,7 +10,7 @@ import {
 import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-products.dto';
 import { UpdateProductDto } from './dto/update-products.dto';
-import { response } from 'express';
+// import { response } from 'express';
 
 @Controller('products')
 export class ProductController {
