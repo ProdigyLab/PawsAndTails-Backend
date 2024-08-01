@@ -14,7 +14,7 @@ export class LoginInfo {
   @Column({ type: 'varchar', length: 512, nullable: false })
   strPassword: string;
 
-  @Column({ type: 'varchar', length: 512, nullable: false })
+  @Column({ type: 'varchar', length: 512, nullable: true })
   strPhone: string;
 
   @Column({
