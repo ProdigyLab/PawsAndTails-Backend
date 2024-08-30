@@ -14,7 +14,7 @@ import { PetInfoModule } from './petInfo/petInfo.module';
     UsersModule,
     ProductModule,
     LoginModule,
-    PetInfoModule
+    PetInfoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
