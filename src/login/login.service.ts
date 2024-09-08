@@ -13,12 +13,18 @@ export class LoginService {
   ) {}
   async create(CreateLoginDto: CreateLoginDto) {
     try {
-      const userInfo = await this.loginInfoRepository.save(CreateLoginDto);
-      if (!userInfo)
+      // const userInfo = await this.loginInfoRepository.save(CreateLoginDto);
+      const userInfo = await this.loginInfoRepository.find({
+        where: {
+          strEmail: CreateLoginDto.strEmail,
+          strPassword: CreateLoginDto.strPassword,
+        },
+      });
+      if (!userInfo || userInfo.length === 0) {
         throw new NotFoundException(
-          'User can not be created. Please try again',
+          `User not found with this ${CreateLoginDto.strEmail}. Please try again`,
         );
-
+      }
       return userInfo;
     } catch (error) {
       return error.response;
