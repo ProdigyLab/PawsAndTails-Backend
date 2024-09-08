@@ -4,20 +4,39 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserInfo } from './entities/user.entity';
+import { LoginInfo } from 'src/login/entities/login.entity';
+import * as bcrypt from 'bcrypt'; // Import bcrypt module
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserInfo)
     private userInfoRepository: Repository<UserInfo>,
+    @InjectRepository(LoginInfo)
+    private loginInfoRepository: Repository<LoginInfo>,
   ) {}
   async create(createUserDto: CreateUserDto) {
     try {
+      const password: any = createUserDto.strPassword;
+      const salt: any = await bcrypt.genSalt(10);
+      const hashedPassword: any = await bcrypt.hash(password, salt);
+      createUserDto = {
+        ...createUserDto,
+        strPassword: hashedPassword,
+      };
       const userInfo = await this.userInfoRepository.save(createUserDto);
       if (!userInfo)
         throw new NotFoundException(
           'User can not be created. Please try again',
         );
+      await this.loginInfoRepository.save({
+        strUserName: userInfo.strUserName,
+        strEmail: userInfo.strEmail,
+        strPassword: hashedPassword,
+        strPhone: userInfo.strPhone,
+        dteCreatedAt: new Date(),
+        dteLastLoginAt: new Date(),
+      });
 
       return userInfo;
     } catch (error) {

@@ -27,11 +27,7 @@ export class LoginController {
     // return this.usersService.create(createUserDto);
     try {
       const data: any = await this.LoginService.create(createLoginDto);
-      return response.status(200).json({
-        statusCode: 200,
-        message: 'User Successfully Created',
-        data,
-      });
+      return response.json(data);
     } catch (error) {
       console.log(error);
     }

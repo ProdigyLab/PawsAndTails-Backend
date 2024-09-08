@@ -43,8 +43,8 @@ export class UserInfo {
   })
   dteLastLoginAt: Date;
 
-  @Column({ type: 'boolean', default: true })
-  blnIsActive: boolean;
+  // @Column({ type: 'boolean', default: true })
+  // blnIsActive: boolean;
 
   @Column({ type: 'int', nullable: true })
   intOrganizationId: number;

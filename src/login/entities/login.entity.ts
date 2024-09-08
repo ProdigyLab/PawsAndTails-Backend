@@ -5,7 +5,7 @@ export class LoginInfo {
   @PrimaryGeneratedColumn()
   intId: number;
 
-  @Column({ type: 'varchar', length: 512, nullable: true })
+  @Column({ type: 'varchar', length: 512, nullable: false })
   strUserName: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
@@ -14,7 +14,7 @@ export class LoginInfo {
   @Column({ type: 'varchar', length: 512, nullable: false })
   strPassword: string;
 
-  @Column({ type: 'varchar', length: 512, nullable: true })
+  @Column({ type: 'varchar', length: 512, nullable: false })
   strPhone: string;
 
   @Column({
