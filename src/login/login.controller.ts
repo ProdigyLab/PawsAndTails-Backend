@@ -8,6 +8,8 @@ import {
   Delete,
   Req,
   Res,
+  HttpStatus,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { CreateLoginDto } from './dto/create-loginUser.dto';
@@ -26,10 +28,30 @@ export class LoginController {
   ) {
     // return this.usersService.create(createUserDto);
     try {
-      const data: any = await this.LoginService.create(createLoginDto);
-      return response.json(data);
+      const result:any = await this.LoginService.create(createLoginDto);
+      if (result.success) {
+        return response.status(HttpStatus.OK).json({
+          message: 'Login successful',
+          user: result.user,
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        });
+      } else {
+        return response.status(HttpStatus.UNAUTHORIZED).json({
+          message: result.error,
+        });
+      }
+      // return response.json(result);
     } catch (error) {
-      console.log(error);
+      console.error('Error during login creation:', error);
+      if (error instanceof InternalServerErrorException) {
+        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'An internal server error occurred',
+        });
+      }
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        message: error.message || 'An error occurred during login',
+      });
     }
   }
 

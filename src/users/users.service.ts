@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { UserInfo } from './entities/user.entity';
 import { LoginInfo } from 'src/login/entities/login.entity';
 import * as bcrypt from 'bcrypt'; // Import bcrypt module
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +15,7 @@ export class UsersService {
     private userInfoRepository: Repository<UserInfo>,
     @InjectRepository(LoginInfo)
     private loginInfoRepository: Repository<LoginInfo>,
+    private readonly jwtService: JwtService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     try {
@@ -29,16 +31,39 @@ export class UsersService {
         throw new NotFoundException(
           'User can not be created. Please try again',
         );
+      const payload = {
+        email: userInfo.strEmail,
+        intId: userInfo.intId,
+        roleId: userInfo.intRoleId,
+        organizationId: userInfo.intOrganizationId,
+      };
+
+      const accessToken = await this.jwtService.signAsync(payload, {
+        expiresIn: '1h',
+      });
+
+      const refreshToken = await this.jwtService.signAsync(payload, {
+        expiresIn: '30d',
+      });
+      console.log('accessToken', accessToken);
+      console.log('refreshToken', refreshToken);
+      await this.userInfoRepository.update(userInfo.intId, {
+        strRefresh_token: refreshToken,
+      });
+      // console.log('strRefresh_token', strRefresh_token);
+
       await this.loginInfoRepository.save({
         strUserName: userInfo.strUserName,
         strEmail: userInfo.strEmail,
         strPassword: hashedPassword,
         strPhone: userInfo.strPhone,
+        strAccess_token: accessToken,
+        strRefresh_token: refreshToken,
         dteCreatedAt: new Date(),
         dteLastLoginAt: new Date(),
       });
 
-      return userInfo;
+      return { user: userInfo, refreshToken, accessToken };
     } catch (error) {
       return error.response;
     }
