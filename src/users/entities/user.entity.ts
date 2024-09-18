@@ -48,4 +48,9 @@ export class UserInfo {
 
   @Column({ type: 'int', nullable: true })
   intOrganizationId: number;
+  @Column({ type: 'varchar', length: 512, nullable: true })
+  strAccess_token: string;
+
+  @Column({ type: 'varchar', length: 512, nullable: true })
+  strRefresh_token: string;
 }
