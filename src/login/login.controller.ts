@@ -22,26 +22,29 @@ export class LoginController {
 
   @Post()
   async create(
-    @Body() createLoginDto: CreateLoginDto,
+    @Body('strEmail') strEmail: string,
+    @Body('strPassword') strPassword: string,
     @Req() request: Request,
     @Res() response: Response,
   ) {
     // return this.usersService.create(createUserDto);
     try {
-      const result:any = await this.LoginService.create(createLoginDto);
-      if (result.success) {
-        return response.status(HttpStatus.OK).json({
-          message: 'Login successful',
-          user: result.user,
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-        });
-      } else {
-        return response.status(HttpStatus.UNAUTHORIZED).json({
-          message: result.error,
-        });
-      }
-      // return response.json(result);
+      const result:any = await this.LoginService.create(strEmail, strPassword);
+      // if (result) {
+      //   return response.status(200).json({
+      //     message: 'Login successful',
+      //     user: result.user,
+      //     // accessToken: result.accessToken,
+      //     // refreshToken: result.refreshToken,
+      //   });
+      // } else {
+      //   return response.status(HttpStatus.UNAUTHORIZED).json({
+      //     message: result.error,
+      //   });
+      // }
+      console.log("result", result);
+      
+      return response.status(200).json(result);
     } catch (error) {
       console.error('Error during login creation:', error);
       if (error instanceof InternalServerErrorException) {
