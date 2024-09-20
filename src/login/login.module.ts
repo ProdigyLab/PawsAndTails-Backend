@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { LoginService } from './login.service';
-import { LoginController } from './login.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoginInfo } from './entities/login.entity';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { LoginController } from './login.controller';
+import { LoginService } from './login.service';
 
 @Module({
   imports: [
@@ -12,11 +12,11 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'y878yux', // Use a secure secret key
-      signOptions: { expiresIn: '1h' }, // Default options
+      signOptions: { expiresIn: '60s' }, // Default options
     }),
   ],
   controllers: [LoginController],
-  providers: [LoginService, JwtService, JwtModule, PassportModule],
-  exports: [JwtModule, LoginService],
+  providers: [LoginService],
+  exports: [LoginService, JwtModule, PassportModule],
 })
 export class LoginModule {}

@@ -1,20 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Req,
   Res,
-  HttpStatus,
-  InternalServerErrorException,
 } from '@nestjs/common';
-import { LoginService } from './login.service';
-import { CreateLoginDto } from './dto/create-loginUser.dto';
-import { UpdateLoginDto } from './dto/update-loginUser.dto';
 import { Request, Response } from 'express';
+import { SUCCESS } from 'src/constants/httpCodes';
+import { success } from 'src/helpers/http';
+import { UpdateLoginDto } from './dto/update-loginUser.dto';
+import { LoginService } from './login.service';
 
 @Controller('login')
 export class LoginController {
@@ -27,34 +26,11 @@ export class LoginController {
     @Req() request: Request,
     @Res() response: Response,
   ) {
-    // return this.usersService.create(createUserDto);
     try {
-      const result:any = await this.LoginService.create(strEmail, strPassword);
-      // if (result) {
-      //   return response.status(200).json({
-      //     message: 'Login successful',
-      //     user: result.user,
-      //     // accessToken: result.accessToken,
-      //     // refreshToken: result.refreshToken,
-      //   });
-      // } else {
-      //   return response.status(HttpStatus.UNAUTHORIZED).json({
-      //     message: result.error,
-      //   });
-      // }
-      console.log("result", result);
-      
-      return response.status(200).json(result);
+      const result: any = await this.LoginService.login(strEmail, strPassword);
+      return response.status(SUCCESS).json(success(result));
     } catch (error) {
-      console.error('Error during login creation:', error);
-      if (error instanceof InternalServerErrorException) {
-        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          message: 'An internal server error occurred',
-        });
-      }
-      return response.status(HttpStatus.BAD_REQUEST).json({
-        message: error.message || 'An error occurred during login',
-      });
+      throw error;
     }
   }
 
