@@ -35,7 +35,7 @@ export class LoginService {
       );
 
       if (!isPasswordValid) {
-        return new UnauthorizedException(
+        throw new UnauthorizedException(
           'Invalid credentials. Please try again.',
         );
       }
