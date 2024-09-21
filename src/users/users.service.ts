@@ -25,7 +25,6 @@ export class UsersService {
   async findByEmail(strEmail: string) {
     try {
       const userInfo = await this.userInfoRepository.findOneBy({ strEmail });
-
       return userInfo;
     } catch (error) {
       return error.response;
@@ -51,6 +50,9 @@ export class UsersService {
           'User can not be created. Please try again',
         );
       const payload = {
+        userName: userInfo.strUserName,
+        firstName: userInfo.strFirstName,
+        lastName: userInfo.strLastName,
         email: userInfo.strEmail,
         intId: userInfo.intId,
         roleId: userInfo.intRoleId,
