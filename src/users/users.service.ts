@@ -1,12 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt'; // Import bcrypt module
+import { LoginInfo } from 'src/login/entities/login.entity';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { UserInfo } from './entities/user.entity';
-import { LoginInfo } from 'src/login/entities/login.entity';
-import * as bcrypt from 'bcrypt'; // Import bcrypt module
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
@@ -17,8 +21,21 @@ export class UsersService {
     private loginInfoRepository: Repository<LoginInfo>,
     private readonly jwtService: JwtService,
   ) {}
+
+  async findByEmail(strEmail: string) {
+    try {
+      const userInfo = await this.userInfoRepository.findOneBy({ strEmail });
+      return userInfo;
+    } catch (error) {
+      return error.response;
+    }
+  }
   async create(createUserDto: CreateUserDto) {
     try {
+      const userEmailExists = await this.findByEmail(createUserDto.strEmail);
+      if (userEmailExists) {
+        throw new InternalServerErrorException('User already exists');
+      }
       const password: any = createUserDto.strPassword;
       const salt: any = await bcrypt.genSalt(10);
       const hashedPassword: any = await bcrypt.hash(password, salt);
@@ -26,12 +43,16 @@ export class UsersService {
         ...createUserDto,
         strPassword: hashedPassword,
       };
+
       const userInfo = await this.userInfoRepository.save(createUserDto);
       if (!userInfo)
         throw new NotFoundException(
           'User can not be created. Please try again',
         );
       const payload = {
+        userName: userInfo.strUserName,
+        firstName: userInfo.strFirstName,
+        lastName: userInfo.strLastName,
         email: userInfo.strEmail,
         intId: userInfo.intId,
         roleId: userInfo.intRoleId,
@@ -45,14 +66,8 @@ export class UsersService {
       const refreshToken = await this.jwtService.signAsync(payload, {
         expiresIn: '30d',
       });
-      console.log('accessToken', accessToken);
-      console.log('refreshToken', refreshToken);
-      await this.userInfoRepository.update(userInfo.intId, {
-        strRefresh_token: refreshToken,
-      });
-      // console.log('strRefresh_token', strRefresh_token);
 
-      await this.loginInfoRepository.save({
+      const login = await this.loginInfoRepository.save({
         strUserName: userInfo.strUserName,
         strEmail: userInfo.strEmail,
         strPassword: hashedPassword,
@@ -62,8 +77,7 @@ export class UsersService {
         dteCreatedAt: new Date(),
         dteLastLoginAt: new Date(),
       });
-
-      return { user: userInfo, refreshToken, accessToken };
+      return login;
     } catch (error) {
       return error.response;
     }

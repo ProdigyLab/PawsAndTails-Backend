@@ -1,13 +1,22 @@
 import { Module } from '@nestjs/common';
-import { LoginService } from './login.service';
-import { LoginController } from './login.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoginInfo } from './entities/login.entity';
-import { JwtService } from '@nestjs/jwt';
+import { LoginController } from './login.controller';
+import { LoginService } from './login.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LoginInfo])],
+  imports: [
+    TypeOrmModule.forFeature([LoginInfo]),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: 'y878yux', // Use a secure secret key
+      signOptions: { expiresIn: '60s' }, // Default options
+    }),
+  ],
   controllers: [LoginController],
-  providers: [LoginService, JwtService],
+  providers: [LoginService],
+  exports: [LoginService, JwtModule, PassportModule],
 })
 export class LoginModule {}

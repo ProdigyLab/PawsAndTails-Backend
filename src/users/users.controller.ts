@@ -1,37 +1,32 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Req,
   Res,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Request, Response } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Request, Response } from 'express';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('create')
   async create(
     @Body() createUserDto: CreateUserDto,
     @Req() request: Request,
     @Res() response: Response,
   ) {
-    // return this.usersService.create(createUserDto);
     try {
       const data: any = await this.usersService.create(createUserDto);
-      return response.status(200).json({
-        statusCode: 200,
-        message: 'User Successfully Created',
-        data,
-      });
+      return response.status(200).json(data);
     } catch (error) {
       console.log(error);
     }

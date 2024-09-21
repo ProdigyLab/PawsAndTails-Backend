@@ -43,14 +43,6 @@ export class UserInfo {
   })
   dteLastLoginAt: Date;
 
-  // @Column({ type: 'boolean', default: true })
-  // blnIsActive: boolean;
-
   @Column({ type: 'int', nullable: true })
   intOrganizationId: number;
-  @Column({ type: 'varchar', length: 512, nullable: true })
-  strAccess_token: string;
-
-  @Column({ type: 'varchar', length: 512, nullable: true })
-  strRefresh_token: string;
 }
