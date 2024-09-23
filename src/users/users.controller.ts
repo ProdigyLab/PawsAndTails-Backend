@@ -29,6 +29,7 @@ export class UsersController {
       return response.status(200).json(data);
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
