@@ -22,6 +22,8 @@ export class PetInfo {
   @Column({ type: 'varchar', length: 1024, nullable: true })
   strPetFood: string;
 
+  @Column({ type: 'varchar', length: 1024, nullable: true })
+  strPetDesc: string;
   @Column({
     type: 'datetime',
     nullable: true,

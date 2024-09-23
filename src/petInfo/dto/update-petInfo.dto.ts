@@ -7,5 +7,6 @@ export class UpdatePetInfoDto extends PartialType(CreatePetInfoDto) {
   readonly strImageURL: string;
   readonly strPetColor: string;
   readonly strPetFood: string;
+  readonly strPetDesc: string;
   readonly dteCreatedAt: Date;
 }
