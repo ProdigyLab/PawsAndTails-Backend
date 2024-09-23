@@ -13,6 +13,8 @@ import { UpdatePetInfoDto } from './dto/update-petInfo.dto';
 import { CreatePetInfoDto } from './dto/create-pet.dto';
 import { PetInfoService } from './petInfo.service';
 import { Request, Response } from 'express';
+import { SUCCESS } from 'src/constants/httpCodes';
+import { success } from 'src/helpers/http';
 // import { response } from 'express';
 
 @Controller('petInfo')
@@ -38,13 +40,18 @@ export class PetInfoController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Res() response: Response) {
     // return this.usersService.findAll();
     try {
       const data: any = await this.petInfoService.findAll();
-      return data;
+      return response.status(SUCCESS).json(success(data));
     } catch (error) {
       console.log(error);
+      return response.status(500).json({
+        statusCode: 500,
+        message: 'Internal server error',
+        error: 'An error occurred while retrieving pet information',
+      });
     }
   }
 
