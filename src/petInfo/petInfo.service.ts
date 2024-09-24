@@ -38,7 +38,9 @@ export class PetInfoService {
 
   async findOne(id: number) {
     try {
-      const petInfos = await this.petInfoRepository.findOneBy({ intId: id });
+      const petInfos = await this.petInfoRepository.findOneBy({
+        intPetInfoId: id,
+      });
       if (petInfos === null) throw new NotFoundException('User not found');
 
       return {
