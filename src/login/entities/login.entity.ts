@@ -22,15 +22,21 @@ export class LoginInfo {
   @Column({ type: 'varchar', length: 512, nullable: true })
   strRefresh_token: string;
 
+  @Column({ type: 'timestamp', nullable: true })
+  dteAccessTokenExpiry: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  dteRefreshTokenExpiry: Date;
+
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: true,
     default: () => 'CURRENT_TIMESTAMP',
   })
   dteCreatedAt: Date;
 
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     nullable: true,
     default: () => 'CURRENT_TIMESTAMP',
   })

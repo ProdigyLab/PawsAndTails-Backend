@@ -46,13 +46,31 @@ export class LoginService {
         roleId: existingUser.intRoleId,
         organizationId: existingUser.intOrganizationId,
       };
+      const accessTokenExpiry = '1h';
+      const refreshTokenExpiry = '30d';
 
       const accessToken = await this.jwtService.signAsync(payload, {
-        expiresIn: '1h',
+        expiresIn: accessTokenExpiry,
       });
+      const refreshToken = await this.jwtService.signAsync(payload, {
+        expiresIn: refreshTokenExpiry,
+      });
+
+      const currentDate = new Date();
+      const accessTokenExpiryDate = new Date(
+        currentDate.getTime() + 60 * 60 * 1000,
+      ); // 1 hour
+      const refreshTokenExpiryDate = new Date(
+        currentDate.getTime() + 30 * 24 * 60 * 60 * 1000,
+      ); // 30 days
+
       existingUser = {
         ...existingUser,
         strAccess_token: accessToken,
+        strRefresh_token: refreshToken,
+        dteAccessTokenExpiry: accessTokenExpiryDate,
+        dteRefreshTokenExpiry: refreshTokenExpiryDate,
+        dteLastLoginAt: new Date(),
       };
       const loginUser = await this.loginInfoRepository.save(existingUser);
       return loginUser;
