@@ -59,13 +59,24 @@ export class UsersService {
         organizationId: userInfo.intOrganizationId,
       };
 
+      const accessTokenExpiry = '1h';
+      const refreshTokenExpiry = '30d';
+
       const accessToken = await this.jwtService.signAsync(payload, {
-        expiresIn: '1h',
+        expiresIn: accessTokenExpiry,
       });
 
       const refreshToken = await this.jwtService.signAsync(payload, {
-        expiresIn: '30d',
+        expiresIn: refreshTokenExpiry,
       });
+
+      const currentDate = new Date();
+      const accessTokenExpiryDate = new Date(
+        currentDate.getTime() + 60 * 60 * 1000,
+      ); // 1 hour
+      const refreshTokenExpiryDate = new Date(
+        currentDate.getTime() + 30 * 24 * 60 * 60 * 1000,
+      ); //
 
       const login = await this.loginInfoRepository.save({
         strUserName: userInfo.strUserName,
@@ -74,6 +85,8 @@ export class UsersService {
         strPhone: userInfo.strPhone,
         strAccess_token: accessToken,
         strRefresh_token: refreshToken,
+        dteAccessTokenExpiry: accessTokenExpiryDate,
+        dteRefreshTokenExpiry: refreshTokenExpiryDate,
         dteCreatedAt: new Date(),
         dteLastLoginAt: new Date(),
       });
