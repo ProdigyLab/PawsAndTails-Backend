@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UpdatePetInfoDto } from './dto/update-petInfo.dto';
 import { CreatePetInfoDto } from './dto/create-pet.dto';
@@ -15,9 +16,11 @@ import { PetInfoService } from './petInfo.service';
 import { Request, Response } from 'express';
 import { SUCCESS } from 'src/constants/httpCodes';
 import { success } from 'src/helpers/http';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 // import { response } from 'express';
 
 @Controller('petInfo')
+@UseGuards(JwtAuthGuard)
 export class PetInfoController {
   constructor(private readonly petInfoService: PetInfoService) {}
 

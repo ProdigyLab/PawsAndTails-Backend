@@ -7,6 +7,7 @@ import { LoginModule } from './login/login.module';
 import { PetInfoModule } from './petInfo/petInfo.module';
 import { ProductModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
@@ -14,6 +15,7 @@ import { UsersModule } from './users/users.module';
     ProductModule,
     LoginModule,
     PetInfoModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
