@@ -5,10 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoginInfo } from './entities/login.entity';
 import { LoginController } from './login.controller';
 import { LoginService } from './login.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([LoginInfo]),
+    AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'y878yux', // Use a secure secret key
