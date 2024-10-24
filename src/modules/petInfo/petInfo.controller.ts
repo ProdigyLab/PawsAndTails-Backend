@@ -13,7 +13,7 @@ import { UpdatePetInfoDto } from './dto/update-petInfo.dto';
 import { CreatePetInfoDto } from './dto/create-pet.dto';
 import { PetInfoService } from './petInfo.service';
 import { Request, Response } from 'express';
-import { SUCCESS } from 'src/constants/httpCodes';
+import { SUCCESS } from 'src/shared/constants/httpCodes';
 import { success } from 'src/helpers/http';
 // import { response } from 'express';
 

@@ -10,7 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { SUCCESS } from 'src/constants/httpCodes';
+import { SUCCESS } from 'src/shared/constants/httpCodes';
 import { success } from 'src/helpers/http';
 import { UpdateLoginDto } from './dto/update-loginUser.dto';
 import { LoginService } from './login.service';
