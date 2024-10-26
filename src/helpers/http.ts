@@ -1,4 +1,4 @@
-import * as statusCodes from '../constants/httpCodes';
+import * as statusCodes from '../shared/constants/httpCodes';
 
 export interface Response<T> {
   statusCode: Number;
