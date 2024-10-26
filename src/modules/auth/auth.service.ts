@@ -10,14 +10,14 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../../_entities/user.entity';
-import { UserService } from '../user/user.service';
+import { UsersService } from '../users/users.service';
+import { User } from 'src/_entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService,
+    @Inject(forwardRef(() => UsersService))
+    private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -82,7 +82,8 @@ export class AuthService {
       throw new BadRequestException('Invalid role');
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const user = await this.userService.createUser(
       name,
       role,
